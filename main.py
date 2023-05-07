@@ -60,3 +60,4 @@ cal.pack(fill='both', expand=True)
 cal.bind('<<CalendarSelected>>', lambda e: on_date_click(cal.selection_get()))
 
 root.mainloop()
+
