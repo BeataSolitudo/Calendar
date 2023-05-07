@@ -11,13 +11,17 @@ def on_date_select():
     message_label.pack(padx=20, pady=20)
     yes_button = ttk.Button(message_window, text='Yes', command=lambda: on_yes_click(date, message_window))
     yes_button.pack(side=tk.LEFT, padx=20, pady=20)
-    no_button = ttk.Button(message_window, text='No', command=message_window.destroy)
+    no_button = ttk.Button(message_window, text='No', command=lambda: on_no_click(date, message_window))
     no_button.pack(side=tk.RIGHT, padx=20, pady=20)
 
 
 def on_yes_click(date, message_window):
-    cal.tag_config('selected_date', background='green')
-    cal.calevent_create(date, 'Selected', 'selected_date')
+    cal.calevent_create(date, 'Selected', 'selected_date_green')
+    message_window.destroy()
+
+
+def on_no_click(date, message_window):
+    cal.calevent_create(date, 'Selected', 'selected_date_red')
     message_window.destroy()
 
 
@@ -26,6 +30,8 @@ root.geometry('600x400')
 
 cal = Calendar(root, selectmode='day', date_pattern='yyyy-mm-dd')
 cal.pack(fill=tk.BOTH, expand=True)
+cal.tag_config('selected_date_green', background='green')
+cal.tag_config('selected_date_red', background='red')
 cal.bind('<<CalendarSelected>>', lambda event: on_date_select())
 
 root.mainloop()
