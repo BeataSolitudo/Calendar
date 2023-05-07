@@ -1,22 +1,41 @@
-import calendar
+import tkinter as tk
+from tkinter import ttk
+from tkcalendar import Calendar, DateEntry
 
-# print(calendar.weekheader(2)) Get you header of week (Mo Tu We....)
-# print(calendar.firstweekday()) Get you position on what week starts
-# print(calendar.month(2023, 5)) Get you month
-# print(calendar.monthcalendar(2023 ,5)) Get you matrix of month
-# print(calendar.calendar(2023)) Get you pretty months days of year
+def set_date_color(date, color):
+    # Remove previous tags from the date
+    tags = cal.tag_has('selected_date')
+    for tag in tags:
+        cal.tag_remove(tag, '1.0', 'end')
 
-# day_of_the_week = calendar.weekday(2023, 5, 7) Gets you day of the week
-# print(day_of_the_week)
+    # Add the new tag with the specified color to the date
+    tag = f'selected_date_{color}'
+    cal.calevent_create(date, 'Selected', 'selected_date', tag=tag)
 
-# is_leap = calendar.isleap(2023) Gets you if the year is leap year
-# print(is_leap)
+def on_date_select(date):
+    message_window = tk.Toplevel(root)
+    message_window.geometry('300x150')
+    message_window.title('Important message')
 
-# how_many_leap_days = calendar.leapdays(2024, 2025) Gets you how many leap days did you skip
-# print(how_many_leap_days)
+    message_label = tk.Label(message_window, text='Did you make today something important to you?')
+    message_label.pack(pady=10)
 
+    yes_button = ttk.Button(message_window, text='Yes', command=lambda: set_date_color(date, 'green'))
+    yes_button.pack(pady=10)
 
+    no_button = ttk.Button(message_window, text='No', command=lambda: set_date_color(date, 'red'))
+    no_button.pack(pady=10)
 
+root = tk.Tk()
+root.geometry('800x600')
+root.title('Calendar')
 
+style = ttk.Style(root)
+style.theme_use('default')
 
+cal = Calendar(root, selectmode='day', year=2023, month=5, day=7)
+cal.pack(pady=20)
 
+cal.bind('<<CalendarSelected>>', lambda event: on_date_select(cal.selection_get()))
+
+root.mainloop()
