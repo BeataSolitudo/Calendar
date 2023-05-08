@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
+import csv
+import datetime
 
 
 def on_date_select():
@@ -18,11 +20,17 @@ def on_date_select():
 def on_yes_click(date, message_window):
     cal.calevent_create(date, 'Selected', 'selected_date_green')
     message_window.destroy()
+    with open("Calendar.csv", "a", newline="") as csvwrite:
+        writer = csv.writer(csvwrite)
+        writer.writerow([date, "1"])
 
 
 def on_no_click(date, message_window):
     cal.calevent_create(date, 'Selected', 'selected_date_red')
     message_window.destroy()
+    with open("Calendar.csv", "a", newline="") as csvwrite:
+        writer = csv.writer(csvwrite)
+        writer.writerow([date, "0"])
 
 
 root = tk.Tk()
@@ -34,4 +42,12 @@ cal.tag_config('selected_date_green', background='green')
 cal.tag_config('selected_date_red', background='red')
 cal.bind('<<CalendarSelected>>', lambda event: on_date_select())
 
+with open("Calendar.csv", "r", newline="") as csvread:
+    reader = csv.reader(csvread)
+    for row in reader:
+        date1 = datetime.datetime.strptime(row[0], '%Y-%m-%d')
+        if row[1] == "1":
+            cal.calevent_create(date1, 'Selected', 'selected_date_green')
+        else:
+            cal.calevent_create(date1, 'Selected', 'selected_date_red')
 root.mainloop()
