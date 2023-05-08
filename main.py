@@ -42,12 +42,18 @@ cal.tag_config('selected_date_green', background='green')
 cal.tag_config('selected_date_red', background='red')
 cal.bind('<<CalendarSelected>>', lambda event: on_date_select())
 
-with open("Calendar.csv", "r", newline="") as csvread:
-    reader = csv.reader(csvread)
-    for row in reader:
-        date1 = datetime.datetime.strptime(row[0], '%Y-%m-%d')
-        if row[1] == "1":
-            cal.calevent_create(date1, 'Selected', 'selected_date_green')
-        else:
-            cal.calevent_create(date1, 'Selected', 'selected_date_red')
+
+
+try:
+    with open("Calendar.csv", "r", newline="") as csvread:
+        reader = csv.reader(csvread)
+        for row in reader:
+            date1 = datetime.datetime.strptime(row[0], '%Y-%m-%d')
+            if row[1] == "1":
+                cal.calevent_create(date1, 'Selected', 'selected_date_green')
+            else:
+                cal.calevent_create(date1, 'Selected', 'selected_date_red')
+except FileNotFoundError:
+    with open("Calendar.csv", "x") as create:
+        create.close()
 root.mainloop()
